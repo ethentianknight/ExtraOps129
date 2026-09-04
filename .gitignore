@@ -1,0 +1,13 @@
+/.build/
+/dist/
+/state/
+/backups/
+/save-backups/
+/work/
+__pycache__/
+*.py[cod]
+*.spec
+*.log
+*.tmp
+*.coop4-new
+*.coop4-restore

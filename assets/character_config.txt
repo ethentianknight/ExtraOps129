@@ -1,0 +1,40 @@
+// Peace Walker character overrides
+// Edit the number after each colon, save, then restart the game using
+// Play Extra Ops 129.cmd.
+// The helper reads this file when it attaches to Peace Walker proper.
+// Changes do not apply to a game that has already been patched.
+// These six settings affect MSF staff only. Snake is unaffected.
+// Battle_H means Battle Dress with helmet (BATTLE W/H).
+// 0 keeps the original model for that outfit. Existing roster assignments
+// (Kaz on Jungle Fatigues/Naked and the seven female alternates) stay active.
+// Visual replacement only: outfit stats and gameplay behavior remain original.
+// Blank lines and // comments are allowed, including after a setting.
+
+// Male MSF Soldier
+Male_Battle: 0
+Male_Battle_H: 0
+Male_Sneaking: 0
+
+// Female MSF Soldier
+Female_Battle: 0
+Female_Battle_H: 0
+Female_Sneaking: 0
+
+// Options — Male:
+// 0: Unchanged
+// 1: Kaz (regular uniform, sunglasses)
+// 2: Kaz Swimsuit (sunglasses)
+
+// Options — Female:
+// 0: Unchanged
+// 1: Paz (school uniform, full hair)
+// 2: Paz Swimsuit
+// 3: Amanda
+// 4: Amanda Sports Outfit
+// 5: Cecile
+// 6: Cecile Swimsuit
+// 7: Strangelove
+
+// Example: Female_Sneaking: 3 uses Amanda for female Sneaking Suit.
+// Missing settings default to 0. Unknown names, duplicate settings,
+// and invalid option numbers stop the helper with a line-numbered error.

@@ -1,0 +1,259 @@
+{
+  "exe_sha256": "9100e40cab8a4d96fbf6a06102e6d3a82dd2a8d951644ffbbef9f536a91f975c",
+  "assignments": [
+    {
+      "gender": 1,
+      "outfit": 3,
+      "name": "Jungle Fatigues",
+      "models": [
+        14745601,
+        14745602
+      ],
+      "original_models": [
+        4425344,
+        3503788
+      ],
+      "item_labels": [
+        "Simple Olive Drab fatigues, offering the basic level of defense, main weapon storage, ammo storage, and camo index.",
+        "Jungle Fatigues",
+        "J.FATIGUES"
+      ]
+    },
+    {
+      "gender": 1,
+      "outfit": 16,
+      "name": "Naked",
+      "models": [
+        14745603,
+        14745604
+      ],
+      "original_models": [
+        13192122,
+        14537471
+      ],
+      "item_labels": [
+        "Fatigues with low defense, camo index, and main weapon ammo storage, but high movement speed. Good for players who like raw, intense combat.",
+        "Naked",
+        "NAKED"
+      ]
+    },
+    {
+      "gender": 1,
+      "outfit": 24,
+      "name": "Naked",
+      "models": [
+        14745603,
+        14745604
+      ],
+      "original_models": [
+        8438215,
+        14537471
+      ],
+      "item_labels": [
+        "Fatigues with low defense, camo index, and main weapon ammo storage, but high movement speed. Good for players who like raw, intense combat.",
+        "Naked",
+        "NAKED"
+      ]
+    },
+    {
+      "gender": 2,
+      "outfit": 27,
+      "name": "Amanda",
+      "models": [
+        14745605,
+        14745606
+      ],
+      "original_models": [
+        9929488,
+        3847797
+      ],
+      "item_labels": [
+        "Same fatigues as Amanda. Identical in basic characteristics to Jungle Fatigues, but LIFE recovery and movement speed are slightly higher. For women only.",
+        "Amanda",
+        "AMANDA"
+      ]
+    },
+    {
+      "gender": 2,
+      "outfit": 14,
+      "name": "Rathalos",
+      "models": [
+        14745607,
+        14745608
+      ],
+      "original_models": [
+        1707348,
+        7528217
+      ],
+      "item_labels": [
+        "Variation of Jungle Fatigues camouflage. Adds Rathalos's Bind Voice ability to CO-OPS messages. Battle Cry can then stop enemies from moving!",
+        "Rathalos",
+        "RATHALOS"
+      ]
+    },
+    {
+      "gender": 2,
+      "outfit": 15,
+      "name": "Gear REX",
+      "models": [
+        14745609,
+        14745610
+      ],
+      "original_models": [
+        1707348,
+        7528217
+      ],
+      "item_labels": [
+        "Variation of Jungle Fatigues camouflage. Grants the wearer the ability to steal PSYCHE from enemies after grabbing them.",
+        "Gear REX",
+        "GEAR REX"
+      ]
+    },
+    {
+      "gender": 2,
+      "outfit": 25,
+      "name": "Tuxedo",
+      "models": [
+        14745611,
+        14745612
+      ],
+      "original_models": [
+        7245875,
+        6825799
+      ],
+      "item_labels": [
+        "A tuxedo. Though not exactly suited for combat missions, you're sure to be the best-dressed. Very low camo index.",
+        "Tuxedo",
+        "TUXEDO"
+      ]
+    },
+    {
+      "gender": 2,
+      "outfit": 17,
+      "name": "Naked (Leaf)",
+      "models": [
+        14745613,
+        14745614
+      ],
+      "original_models": [
+        3077995,
+        14953914
+      ],
+      "item_labels": [
+        "Variation of Naked with camouflage pants. Raises camo index in jungle environments, but only half as much as full-body camo.",
+        "Naked (Leaf)",
+        "NKD(LEAF)"
+      ]
+    },
+    {
+      "gender": 2,
+      "outfit": 18,
+      "name": "Naked (Tiger Stripe)",
+      "models": [
+        14745615,
+        14745616
+      ],
+      "original_models": [
+        3077995,
+        14953914
+      ],
+      "item_labels": [
+        "Variation of Naked with camouflage pants. Raises camo index near water, but only half as much as full-body camo.",
+        "Naked (Tiger Stripe)",
+        "NKD(TIGER)"
+      ]
+    },
+    {
+      "gender": 2,
+      "outfit": 19,
+      "name": "Naked (Choco Chip)",
+      "models": [
+        14745617,
+        14745618
+      ],
+      "original_models": [
+        3077995,
+        14953914
+      ],
+      "item_labels": [
+        "Variation of Naked with camouflage pants. Raises camo index in dirt or sand environments, but only half as much as full-body camo.",
+        "Naked (Choco Chip)",
+        "NKD(CHOCO)"
+      ]
+    }
+  ],
+  "resource_map": [
+    [
+      14745601,
+      118622036
+    ],
+    [
+      14745602,
+      118622127
+    ],
+    [
+      14745603,
+      84019210
+    ],
+    [
+      14745604,
+      84019274
+    ],
+    [
+      14745605,
+      240257162
+    ],
+    [
+      14745606,
+      240257279
+    ],
+    [
+      14745607,
+      140642676
+    ],
+    [
+      14745608,
+      140642759
+    ],
+    [
+      14745609,
+      161614362
+    ],
+    [
+      14745610,
+      161614476
+    ],
+    [
+      14745611,
+      134351614
+    ],
+    [
+      14745612,
+      134351691
+    ],
+    [
+      14745613,
+      153226136
+    ],
+    [
+      14745614,
+      153226244
+    ],
+    [
+      14745615,
+      114429040
+    ],
+    [
+      14745616,
+      114429104
+    ],
+    [
+      14745617,
+      225578224
+    ],
+    [
+      14745618,
+      225578327
+    ]
+  ]
+}

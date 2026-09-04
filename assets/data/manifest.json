@@ -1,0 +1,166 @@
+{
+  "name": "Extra Ops 129",
+  "version": "0.2.1",
+  "steam_appid": 2492660,
+  "tested_steam_build": "25052315",
+  "exe_sha256": "9100e40cab8a4d96fbf6a06102e6d3a82dd2a8d951644ffbbef9f536a91f975c",
+  "original_files": {
+    "002aba34.DAT": "a54d031bdba52da2710efcd0d98564c209dd7f54d49893cc175da886c1d56cb2",
+    "002aba34.KEY": "f2f0ff6844ab490812e7dcdb28e4d6c55adbe61232acd25154fd69551258b381",
+    "009645fa.PDT": "6e7a163f499f86af2e4eb271a7b71ddb2ec55c68c68e772fff09eea34644b479"
+  },
+  "modes": {
+    "models": {
+      "files": {
+        "002aba34.DAT": "02d866ed2a64b13b5de2fbf2d85d482f113e0a8388e841246a0c526b16b8b242",
+        "002aba34.KEY": "8c5368f9224c4af2ebd3f9ec3fb9b0af580a61c7272d5d0b2c84778f68c7001d",
+        "009645fa.PDT": "6c34fa06ae9103ea7cfdb4c15c298bc65226d057b65ae4109ad69fe671eee8d1"
+      }
+    },
+    "coop": {
+      "files": {
+        "002aba34.DAT": "a54d031bdba52da2710efcd0d98564c209dd7f54d49893cc175da886c1d56cb2",
+        "002aba34.KEY": "f2f0ff6844ab490812e7dcdb28e4d6c55adbe61232acd25154fd69551258b381",
+        "009645fa.PDT": "791d205f7361c6324eba4b96628d8093505a7d4994949296b7a406e34c5e7fbc"
+      }
+    },
+    "both": {
+      "files": {
+        "002aba34.DAT": "02d866ed2a64b13b5de2fbf2d85d482f113e0a8388e841246a0c526b16b8b242",
+        "002aba34.KEY": "8c5368f9224c4af2ebd3f9ec3fb9b0af580a61c7272d5d0b2c84778f68c7001d",
+        "009645fa.PDT": "8581364ca8e01c65e1298a7f20a6a42b693cfa37b228c13fd3e3b9fdbf445e91"
+      }
+    }
+  },
+  "patches": {
+    "model_002aba34.DAT": {
+      "file": "model_002aba34.DAT.patch.gz",
+      "sha256": "8daddad2537291757fc13c28b739414dd7ad5070b7136e83ac3d45119271df52",
+      "output_size": 551280640,
+      "output_sha256": "02d866ed2a64b13b5de2fbf2d85d482f113e0a8388e841246a0c526b16b8b242",
+      "format": "EO129P1"
+    },
+    "model_002aba34.KEY": {
+      "file": "model_002aba34.KEY.patch.gz",
+      "sha256": "d7ae914091b54a70d27b39cc23552c6a7b9da3f90eb545753034bc1ed3bae358",
+      "output_size": 43112,
+      "output_sha256": "8c5368f9224c4af2ebd3f9ec3fb9b0af580a61c7272d5d0b2c84778f68c7001d",
+      "format": "EO129P1"
+    },
+    "model_009645fa.PDT": {
+      "file": "model_009645fa.PDT.patch.gz",
+      "sha256": "a649aac6fa069ca5ba9cc344badedfe31c28b8a5280d3e136f0751b0c94c1024",
+      "output_size": 511328256,
+      "output_sha256": "6c34fa06ae9103ea7cfdb4c15c298bc65226d057b65ae4109ad69fe671eee8d1",
+      "format": "EO129P1"
+    },
+    "coop_from_vanilla": {
+      "file": "coop_from_vanilla.patch",
+      "sha256": "7c8fd14e0cd8285ef170f9e9dd0fcf92de87d08b10709dc4431c6fcc730e182d",
+      "output_size": 511328256,
+      "output_sha256": "791d205f7361c6324eba4b96628d8093505a7d4994949296b7a406e34c5e7fbc",
+      "format": "CP4P"
+    },
+    "coop_from_models": {
+      "file": "coop_from_models.patch",
+      "sha256": "f4a51dbcd01ed020e4d57cd14ac6920b3b706bc855420ff0147bc4b63b6e37ed",
+      "output_size": 511328256,
+      "output_sha256": "8581364ca8e01c65e1298a7f20a6a42b693cfa37b228c13fd3e3b9fdbf445e91",
+      "format": "CP4P"
+    }
+  },
+  "coop_scope": "all mission records whose original capacity is exactly 2 except Main Op 20 Torture Chamber Escape; capacity 1 and 4 records unchanged",
+  "coop_two_player_indices": [
+    2,
+    3,
+    5,
+    6,
+    8,
+    9,
+    11,
+    13,
+    14,
+    16,
+    17,
+    19,
+    21,
+    23,
+    24,
+    25,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    35,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    51,
+    53,
+    54,
+    55,
+    58,
+    61,
+    64,
+    65,
+    67,
+    68,
+    69,
+    71,
+    72,
+    73,
+    75,
+    76,
+    79,
+    82,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    92,
+    93,
+    97,
+    98,
+    104,
+    105,
+    108,
+    109,
+    110,
+    111,
+    112,
+    117,
+    118,
+    119,
+    122,
+    123,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    139,
+    145,
+    146,
+    147,
+    149,
+    150,
+    151,
+    152,
+    153,
+    154,
+    155,
+    156,
+    233
+  ],
+  "coop_excluded_indices": [
+    20
+  ]
+}

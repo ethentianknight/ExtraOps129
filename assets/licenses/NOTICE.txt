@@ -1,0 +1,1 @@
+EO129 bundles CPython using PyInstaller. CPython license: Python.txt. PyInstaller bootloader is distributed under GPL-2.0-or-later with its bootloader exception permitting distribution of this frozen application. See PyInstaller.txt and https://pyinstaller.org/ . Game assets remain the property of their respective owners; EO129 requires a matching installed copy of the game.

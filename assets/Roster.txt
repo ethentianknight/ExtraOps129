@@ -1,0 +1,20 @@
+EXTRA OPS 129 — INCLUDED ROSTER
+
+MALE MSF STAFF
+Jungle Fatigues: Kaz (regular uniform + sunglasses)
+Naked: Kaz Swimsuit (+ sunglasses)
+
+FEMALE MSF STAFF
+Amanda: Amanda
+Rathalos: Cecile
+Gear REX: Paz (school uniform, full hair)
+Tuxedo: Strangelove
+NKD (Leaf): Paz Swimsuit
+NKD (Tiger): Cecile Swimsuit
+NKD (Choco): Amanda Sports Outfit
+
+These assignments stay active alongside character_config.txt choices.
+Visual swaps retain the selected outfit's normal gameplay properties.
+Known limitation: Cecile's face can be missing in cutscenes, while it works
+in loadout and gameplay. Optional Battle/Sneaking config choices have passed
+mapping checks but have not all been tested in game.
