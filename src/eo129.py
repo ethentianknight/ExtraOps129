@@ -14,6 +14,12 @@ def game_dir():
 
 def manifest():return json.loads((DATA/'manifest.json').read_text())
 
+def installation_receipt():
+ path=STATE/'install.json'
+ if not path.is_file():raise RuntimeError('No installation record was found. Run Setup Extra Ops 129.cmd from this same folder and choose install option 1, 2, or 3 before Play.')
+ try:return json.loads(path.read_text())
+ except (OSError,json.JSONDecodeError) as error:raise RuntimeError('The installation record is unreadable. Keep this folder in its original location and reinstall from verified vanilla files.') from error
+
 def processes():
  k=C.WinDLL('kernel32',use_last_error=True)
  class Entry(C.Structure):_fields_=[('size',W.DWORD),('usage',W.DWORD),('pid',W.DWORD),('heap',C.c_size_t),('module',W.DWORD),('threads',W.DWORD),('parent',W.DWORD),('priority',W.LONG),('flags',W.DWORD),('exe',W.WCHAR*260)]
@@ -116,7 +122,7 @@ def install(mode):
  print(f'Installed mode: {mode}. Use Play Extra Ops 129.cmd for each session.')
 
 def uninstall():
- require_game_closed();receipt=json.loads((STATE/'install.json').read_text());game=Path(receipt['game']);archives=game/'MLG/disc0_rel';work=ROOT/'work';work.mkdir(exist_ok=True)
+ require_game_closed();receipt=installation_receipt();game=Path(receipt['game']);archives=game/'MLG/disc0_rel';work=ROOT/'work';work.mkdir(exist_ok=True)
  if {name:digest(archives/name) for name in NAMES}!=receipt['installed_files']:raise RuntimeError('Installed archives changed. Uninstall stopped to protect them.')
  if {name:digest(BACKUP/name) for name in NAMES}!=receipt['original_files']:raise RuntimeError('Verified original backups are missing or damaged.')
  for name in NAMES:shutil.copy2(archives/name,work/name)
@@ -141,13 +147,13 @@ def snapshots():
  return items[choice-1].parent
 
 def uninstall_restore_save():
- require_steam_closed();snapshot=snapshots();receipt=json.loads((STATE/'install.json').read_text());game=Path(receipt['game']);uninstall();restore_saves(game,ROOT,snapshot)
+ require_steam_closed();snapshot=snapshots();receipt=installation_receipt();game=Path(receipt['game']);uninstall();restore_saves(game,ROOT,snapshot)
 
 def restore_save_only():
  require_steam_closed();restore_saves(game_dir(),ROOT,snapshots())
 
 def installed_mode():
- receipt=json.loads((STATE/'install.json').read_text());doc=manifest();mode=receipt['mode']
+ receipt=installation_receipt();doc=manifest();mode=receipt['mode']
  if mode not in doc['modes']:raise RuntimeError('Unknown installed mode.')
  game=Path(receipt['game']);archives=game/'MLG/disc0_rel';actual={name:digest(archives/name) for name in NAMES}
  if actual!=doc['modes'][mode]['files'] or actual!=receipt['installed_files']:raise RuntimeError('Installed files do not match the selected mode.')

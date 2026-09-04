@@ -72,6 +72,10 @@ The installer stores verified original archives under `Extra Ops 129\backups\`. 
 
 Installation refuses unsupported or previously modified archives.
 
+## Troubleshooting
+
+`No installation record was found` means Setup was not completed from the current `Extra Ops 129` folder, or the folder was moved after installation. Keep the folder in place, run `Setup Extra Ops 129.cmd`, and choose option 1, 2, or 3 before Play.
+
 ## Building
 
 Use Python 3.12 x64:
