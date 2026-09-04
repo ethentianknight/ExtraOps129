@@ -51,6 +51,8 @@ Run `Setup Extra Ops 129.cmd` and choose:
 
 Uninstall restores all three original archives regardless of the installed mode.
 
+After option 4 or 5, launch the vanilla game directly through Steam. To use the mod again, run Setup, install option 1, 2, or 3, and then use `Play Extra Ops 129.cmd`.
+
 Before using option 5 or 6, disable Steam Cloud for Peace Walker in Steam's game properties. Exit Steam completely, run the restore, and restart Steam after it finishes. If Steam reports a conflict, keep the local files.
 
 The installer preserves the current saves, verifies the restored snapshot after replacement, and refreshes its local timestamps.
