@@ -6,7 +6,7 @@
 // These six settings affect MSF staff only.
 // Battle_H means Battle Dress with helmet (BATTLE W/H).
 // 0 keeps the original model for that outfit. Existing roster assignments
-// (Kaz on Jungle Fatigues/Naked, Zadornov on Tuxedo, and the seven female
+// (Kaz on Jungle Fatigues/Naked, Zadornov on Tuxedo, and the eight female
 // alternates) stay active.
 // Visual replacement only: outfit stats and gameplay behavior remain original.
 // Blank lines and // comments are allowed, including after a setting.

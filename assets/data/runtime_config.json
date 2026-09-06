@@ -194,6 +194,20 @@
         4256766
       ],
       "character": "Zadornov"
+    },
+    {
+      "gender": 2,
+      "outfit": 20,
+      "name": "Naked (AUSY)",
+      "models": [
+        14745621,
+        14745622
+      ],
+      "original_models": [
+        3077995,
+        14953914
+      ],
+      "character": "Strangelove Swimsuit"
     }
   ],
   "resource_map": [

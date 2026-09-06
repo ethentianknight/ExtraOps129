@@ -16,6 +16,7 @@ Tuxedo: Strangelove
 NKD (Leaf): Paz Swimsuit
 NKD (Tiger): Cecile Swimsuit
 NKD (Choco): Amanda Sports Outfit
+NKD (AUSY): Strangelove Swimsuit
 
 OPTIONAL FEMALE CONFIG MODELS
 Strangelove Swimsuit
