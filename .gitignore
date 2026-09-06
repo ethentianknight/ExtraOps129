@@ -11,3 +11,9 @@ __pycache__/
 *.tmp
 *.coop4-new
 *.coop4-restore
+/deck/winmm.dll
+/deck/*.obj
+/deck/*.lib
+/deck/*.exp
+/winmm_proxy.obj
+/deck_stub_test.obj

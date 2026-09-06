@@ -27,6 +27,10 @@ Character models and four-player co-op for Metal Gear Solid: Peace Walker.
 
 Run `Play Extra Ops 129.cmd` for every modded session. Start Peace Walker through its launcher and wait for the active message before selecting a mission. The helper can close after applying the runtime hooks. Runtime changes disappear when the game exits.
 
+After Peace Walker proper has opened, run `Patch PW Networking Protocol.exe`. Wait for it to report that the patch was applied, then close it. Run it once for every game session. The network patch changes memory only and does not edit game files or saves.
+
+Windows Defender and other antivirus software may flag the included executables because they modify the running game. The network patch executable is the most likely to be flagged because it allocates and writes executable process memory and starts a remote thread to configure Steam Networking timeouts. Source and technical details are included in `NETWORK_PROTOCOL.md` and `source/network_protocol.py`.
+
 ## Models
 
 Edit `character_config.txt` before starting the game. `0` leaves an outfit unchanged. See `Roster.txt` for the available characters. Snake is unaffected.
@@ -38,6 +42,8 @@ Starting the game directly through Steam does not apply model replacements.
 Missions originally capped at two players are changed to four players, except Main Op 20: Torture Chamber Escape. Original one-player and four-player missions are unchanged.
 
 Every player needs the same mod mode installed and must start the game through `Play Extra Ops 129.cmd`.
+
+The network protocol patch remains compatible with unpatched players, but each player should run it because it repairs that player's local connection handling.
 
 Players 3 and 4 reuse placements 1 and 2 when a room only provides two spawn placements. Room transitions, cutscenes, special scripts, and every individual mission have not all been tested.
 
@@ -88,3 +94,9 @@ python build.py
 ```
 
 Release files are written to `dist\`.
+
+Build the Steam Deck package on Windows with the Visual Studio C++ tools installed:
+
+```text
+python build_deck.py
+```

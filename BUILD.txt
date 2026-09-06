@@ -3,5 +3,9 @@ Windows x64 with Python 3.12.
 python -m pip install -r requirements.txt
 python build.py
 
+Steam Deck package (built on Windows with Visual Studio C++ tools):
+
+python build_deck.py
+
 The build creates the ready-to-use folder and ZIP under dist.
 It uses only the files included in this source package.
