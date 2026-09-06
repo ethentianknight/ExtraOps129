@@ -32,7 +32,7 @@ def stub_code(base):
     return bytes(out)
 
 def validate():
-    if len(config['resource_map']) != 22 or len({p[0] for p in config['resource_map']}) != 22:
+    if len(config['resource_map']) != 20 or len({p[0] for p in config['resource_map']}) != 20:
         raise ValueError('Invalid model resource list')
     pairs = [(a['gender'], a['outfit']) for a in config['assignments']]
     if pairs[:11] != [(1, 3), (1, 16), (1, 24), (2, 27), (2, 14), (2, 15), (2, 25), (2, 17), (2, 18), (2, 19), (1, 25)]:

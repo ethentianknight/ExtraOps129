@@ -1,6 +1,6 @@
 {
   "name": "Extra Ops 129",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "steam_appid": 2492660,
   "tested_steam_build": "25052315",
   "exe_sha256": "9100e40cab8a4d96fbf6a06102e6d3a82dd2a8d951644ffbbef9f536a91f975c",
@@ -12,8 +12,8 @@
   "modes": {
     "models": {
       "files": {
-        "002aba34.DAT": "e6dc3d50cd032e028a298aef0a398554080044e95a560a427949e4fd8bfaa321",
-        "002aba34.KEY": "cd892bc5c459dc2deab039a666c96ec7d756f4fe1edbadc1747e1d4f18c382dc",
+        "002aba34.DAT": "69922f55605084c03f9eb951868f9049177348f48b38cc5eb91f7133012a7071",
+        "002aba34.KEY": "89bb24518b87c545301933d146e7ebce764196caeb285efe7f2999cd48866c82",
         "009645fa.PDT": "6c34fa06ae9103ea7cfdb4c15c298bc65226d057b65ae4109ad69fe671eee8d1"
       }
     },
@@ -26,8 +26,8 @@
     },
     "both": {
       "files": {
-        "002aba34.DAT": "e6dc3d50cd032e028a298aef0a398554080044e95a560a427949e4fd8bfaa321",
-        "002aba34.KEY": "cd892bc5c459dc2deab039a666c96ec7d756f4fe1edbadc1747e1d4f18c382dc",
+        "002aba34.DAT": "69922f55605084c03f9eb951868f9049177348f48b38cc5eb91f7133012a7071",
+        "002aba34.KEY": "89bb24518b87c545301933d146e7ebce764196caeb285efe7f2999cd48866c82",
         "009645fa.PDT": "8581364ca8e01c65e1298a7f20a6a42b693cfa37b228c13fd3e3b9fdbf445e91"
       }
     }
@@ -35,16 +35,16 @@
   "patches": {
     "model_002aba34.DAT": {
       "file": "model_002aba34.DAT.patch.gz",
-      "sha256": "33ec880f862b16839ca94450e28a1a09c808c8396f9319c632974a61bcc5f830",
-      "output_size": 551706624,
-      "output_sha256": "e6dc3d50cd032e028a298aef0a398554080044e95a560a427949e4fd8bfaa321",
+      "sha256": "93f24c35762d38c19af4a79975913a9976255721790b5692d534b30546553a89",
+      "output_size": 551501824,
+      "output_sha256": "69922f55605084c03f9eb951868f9049177348f48b38cc5eb91f7133012a7071",
       "format": "EO129P1"
     },
     "model_002aba34.KEY": {
       "file": "model_002aba34.KEY.patch.gz",
-      "sha256": "cc58eadd63ce3e5872b0f061d8ab5889c3b5b30a20e0371c3249b6e7a16c2a3b",
-      "output_size": 43192,
-      "output_sha256": "cd892bc5c459dc2deab039a666c96ec7d756f4fe1edbadc1747e1d4f18c382dc",
+      "sha256": "f7e7d8f871974478529d86d97c704b2c01e6d4340d89d976c05cfcc952b44527",
+      "output_size": 43152,
+      "output_sha256": "89bb24518b87c545301933d146e7ebce764196caeb285efe7f2999cd48866c82",
       "format": "EO129P1"
     },
     "model_009645fa.PDT": {

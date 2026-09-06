@@ -4,7 +4,7 @@ import re
 import sys
 CONFIG_PATH = (Path(sys.executable).parent if getattr(sys, 'frozen', False) else Path(__file__).parent) / 'character_config.txt'
 SLOTS = {'Male_Battle': (1, 1, 'Battle Dress', (10277967, 2821001)), 'Male_Battle_H': (1, 2, 'Battle Dress (with helmet)', (10277967, 2821001)), 'Male_Sneaking': (1, 0, 'Sneaking Suit', (3653363, 6601267)), 'Female_Battle': (2, 1, 'Battle Dress', (5327545, 12997359)), 'Female_Battle_H': (2, 2, 'Battle Dress (with helmet)', (5327545, 12997359)), 'Female_Sneaking': (2, 0, 'Sneaking Suit', (16505124, 8453078))}
-OPTIONS = {1: {1: ('Kaz', 14745601), 2: ('Kaz Swimsuit', 14745603), 3: ('Zadornov', 14745619), 4: ('Snake (High Resolution)', 14745621)}, 2: {1: ('Paz', 14745609), 2: ('Paz Swimsuit', 14745613), 3: ('Amanda', 14745605), 4: ('Amanda Sports Outfit', 14745617), 5: ('Cecile', 14745607), 6: ('Cecile Swimsuit', 14745615), 7: ('Strangelove', 14745611)}}
+OPTIONS = {1: {1: ('Kaz', 14745601), 2: ('Kaz Swimsuit', 14745603), 3: ('Zadornov', 14745619)}, 2: {1: ('Paz', 14745609), 2: ('Paz Swimsuit', 14745613), 3: ('Amanda', 14745605), 4: ('Amanda Sports Outfit', 14745617), 5: ('Cecile', 14745607), 6: ('Cecile Swimsuit', 14745615), 7: ('Strangelove', 14745611)}}
 
 def parse_selections(text):
     selections = {key: 0 for key in SLOTS}

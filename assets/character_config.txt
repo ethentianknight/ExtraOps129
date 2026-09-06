@@ -26,7 +26,6 @@ Female_Sneaking: 0
 // 1: Kaz (regular uniform, sunglasses)
 // 2: Kaz Swimsuit (sunglasses)
 // 3: Zadornov
-// 4: Snake (High Resolution)
 
 // Options — Female:
 // 0: Unchanged
