@@ -17,6 +17,9 @@ NKD (Leaf): Paz Swimsuit
 NKD (Tiger): Cecile Swimsuit
 NKD (Choco): Amanda Sports Outfit
 
+OPTIONAL FEMALE CONFIG MODELS
+Strangelove Swimsuit
+
 These assignments stay active alongside character_config.txt choices.
 Visual swaps retain the selected outfit's normal gameplay properties.
 Known limitation: Cecile's face can be missing in cutscenes, while it works

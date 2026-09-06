@@ -36,6 +36,7 @@ Female_Sneaking: 0
 // 5: Cecile
 // 6: Cecile Swimsuit
 // 7: Strangelove
+// 8: Strangelove Swimsuit
 
 // Example: Female_Sneaking: 3 uses Amanda for female Sneaking Suit.
 // Missing settings default to 0. Unknown names, duplicate settings,
