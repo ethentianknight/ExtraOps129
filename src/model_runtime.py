@@ -32,12 +32,12 @@ def stub_code(base):
     return bytes(out)
 
 def validate():
-    if len(config['resource_map']) != 18 or len({p[0] for p in config['resource_map']}) != 18:
+    if len(config['resource_map']) != 22 or len({p[0] for p in config['resource_map']}) != 22:
         raise ValueError('Invalid model resource list')
     pairs = [(a['gender'], a['outfit']) for a in config['assignments']]
-    if pairs[:10] != [(1, 3), (1, 16), (1, 24), (2, 27), (2, 14), (2, 15), (2, 25), (2, 17), (2, 18), (2, 19)]:
+    if pairs[:11] != [(1, 3), (1, 16), (1, 24), (2, 27), (2, 14), (2, 15), (2, 25), (2, 17), (2, 18), (2, 19), (1, 25)]:
         raise ValueError('Invalid base roster')
-    if len(pairs) != len(set(pairs)) or not set(pairs[10:]) <= {(s[0], s[1]) for s in SLOTS.values()}:
+    if len(pairs) != len(set(pairs)) or not set(pairs[11:]) <= {(s[0], s[1]) for s in SLOTS.values()}:
         raise ValueError('Conflicting outfit choices')
     print('Character configuration loaded.', flush=True)
     for key, value in config['user_selections'].items():
@@ -211,7 +211,7 @@ def apply(pid, base):
             raise
         (D / 'runtime_applied.json').write_text(json.dumps({'pid': pid, 'base': hex(base), 'stub': hex(allocation), 'assignments': config['assignments'], 'resource_map': config['resource_map'], 'verified': True, 'time': time.time()}, indent=2))
         applied = True
-        print(f"APPLIED: roster and {len(config['assignments']) - 10} configured outfit overrides; readback verified.", flush=True)
+        print(f"APPLIED: roster and {len(config['assignments']) - 11} configured outfit overrides; readback verified.", flush=True)
     finally:
         if suspended:
             status = nt.NtResumeProcess(h)

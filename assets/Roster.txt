@@ -3,6 +3,11 @@ EXTRA OPS 129 — INCLUDED ROSTER
 MALE MSF STAFF
 Jungle Fatigues: Kaz (regular uniform + sunglasses)
 Naked: Kaz Swimsuit (+ sunglasses)
+Tuxedo: Zadornov
+
+OPTIONAL MALE CONFIG MODELS
+Zadornov
+Snake (High Resolution)
 
 FEMALE MSF STAFF
 Amanda: Amanda

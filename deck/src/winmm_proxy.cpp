@@ -28,15 +28,16 @@ struct Assignment {
     uint32_t original_b;
 };
 
-static const std::array<std::array<uint32_t, 2>, 18> resource_map = {{
+static const std::array<std::array<uint32_t, 2>, 22> resource_map = {{
     {14745601,118622036},{14745602,118622127},{14745603,84019210},{14745604,84019274},
     {14745605,240257162},{14745606,240257279},{14745607,140642676},{14745608,140642759},
     {14745609,161614362},{14745610,161614476},{14745611,134351614},{14745612,134351691},
     {14745613,153226136},{14745614,153226244},{14745615,114429040},{14745616,114429104},
-    {14745617,225578224},{14745618,225578327}
+    {14745617,225578224},{14745618,225578327},{14745619,34737598},{14745620,34737625},
+    {14745621,46271988},{14745622,46272013}
 }};
 
-static const std::array<Assignment, 10> base_assignments = {{
+static const std::array<Assignment, 11> base_assignments = {{
     {1,3,14745601,14745602,4425344,3503788},
     {1,16,14745603,14745604,13192122,14537471},
     {1,24,14745603,14745604,8438215,14537471},
@@ -46,7 +47,8 @@ static const std::array<Assignment, 10> base_assignments = {{
     {2,25,14745611,14745612,7245875,6825799},
     {2,17,14745613,14745614,3077995,14953914},
     {2,18,14745615,14745616,3077995,14953914},
-    {2,19,14745617,14745618,3077995,14953914}
+    {2,19,14745617,14745618,3077995,14953914},
+    {1,25,14745619,14745620,7245875,6825799}
 }};
 
 static const unsigned char selector_bytes[] = {
@@ -108,7 +110,7 @@ template <typename T> static void append_value(std::vector<uint8_t>& out, T valu
 }
 
 static std::vector<uint8_t> model_stub(uint8_t* base) {
-    constexpr uintptr_t tail = 18916496 + (96 - 18) * 8;
+    constexpr uintptr_t tail = 18916496 + (96 - 22) * 8;
     std::vector<uint8_t> out;
     append(out,{0x49,0xba}); append_value(out,reinterpret_cast<uint64_t>(base + tail));
     for (size_t i=0;i<resource_map.size();++i) {
@@ -192,7 +194,7 @@ static std::vector<Assignment> assignments(const fs::path& config_path) {
         std::string key=trim(line.substr(0,colon));int value=std::stoi(trim(line.substr(colon+1)));
         for(const auto& slot:slots) if(key==slot.key && value>0) {
             uint32_t id=0;
-            if(slot.gender==1 && value<=2) id=value==1?14745601:14745603;
+            if(slot.gender==1 && value<=4) {const uint32_t ids[]={0,14745601,14745603,14745619,14745621};id=ids[value];}
             if(slot.gender==2 && value<=7) {const uint32_t ids[]={0,14745609,14745613,14745605,14745617,14745607,14745615,14745611};id=ids[value];}
             if(id)result.push_back({slot.gender,slot.outfit,id,id+1,slot.a,slot.b});
         }
@@ -201,7 +203,7 @@ static std::vector<Assignment> assignments(const fs::path& config_path) {
 }
 
 static bool apply_models(uint8_t* base,const fs::path& root) {
-    constexpr uintptr_t hook=873582,map=18916496,tail=map+(96-18)*8,table=16345920;
+    constexpr uintptr_t hook=873582,map=18916496,tail=map+(96-22)*8,table=16345920;
     const unsigned char expected[]={0x33,0xc0,0x48,0x83,0xc4,0x20,0x5b,0xc3,0xcc,0xcc,0xcc,0xcc};
     if(!bytes_equal(base+hook,expected,sizeof(expected)) || !bytes_equal(base+4289552,selector_bytes,sizeof(selector_bytes)))return false;
     auto code=model_stub(base);void* allocation=VirtualAlloc(nullptr,code.size(),MEM_COMMIT|MEM_RESERVE,PAGE_EXECUTE_READWRITE);if(!allocation)return false;

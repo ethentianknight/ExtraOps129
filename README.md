@@ -33,7 +33,7 @@ Windows Defender and other antivirus software may flag the included executables 
 
 ## Models
 
-Edit `character_config.txt` before starting the game. `0` leaves an outfit unchanged. See `Roster.txt` for the available characters. Snake is unaffected.
+Edit `character_config.txt` before starting the game. `0` leaves an outfit unchanged. See `Roster.txt` for the available characters. The high-resolution Snake option changes MSF staff only.
 
 Starting the game directly through Steam does not apply model replacements.
 
