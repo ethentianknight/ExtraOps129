@@ -16,7 +16,7 @@ def main():
     assets = root / "assets"
     deck = root / "deck"
     work = root / ".build/deck"
-    output = root / "dist/Extra-Ops-129-Steam-Deck-v1.0"
+    output = root / "dist/Extra-Ops-129-Steam-Deck-v1.0.1"
     if output.exists():
         shutil.rmtree(output)
     output.mkdir(parents=True)

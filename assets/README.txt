@@ -27,7 +27,11 @@ Character models and four-player co-op for Metal Gear Solid: Peace Walker.
 
 Run `Play Extra Ops 129.cmd` for every modded session. Start Peace Walker through its launcher and wait for the active message before selecting a mission. The helper can close after applying the runtime hooks. Runtime changes disappear when the game exits.
 
+Run `Play Extra Ops 129 with Network Patch.cmd` to start Extra Ops 129 and apply the network patch in one step. It waits for Peace Walker proper before applying both sets of runtime changes.
+
 After Peace Walker proper has opened, run `Patch PW Networking Protocol.exe`. Wait for it to report that the patch was applied, then close it. Run it once for every game session. The network patch changes memory only and does not edit game files or saves.
+
+Credit to ThySyn for the idea to bundle network patch with the launcher
 
 Windows Defender and other antivirus software may flag the included executables because they modify the running game. The network patch executable is the most likely to be flagged because it allocates and writes executable process memory and starts a remote thread to configure Steam Networking timeouts. Source and technical details are included in `NETWORK_PROTOCOL.md` and `source/network_protocol.py`.
 

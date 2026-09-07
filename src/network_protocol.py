@@ -413,7 +413,8 @@ def main():
     record = apply(pid, module_map, retry, initial, connected)
     print("Connection stability patch applied for this game run.", flush=True)
     print(json.dumps(record, indent=2), flush=True)
-    input("Press Enter to close...")
+    if "--no-pause" not in sys.argv:
+        input("Press Enter to close...")
 
 
 if __name__ == "__main__":
@@ -421,5 +422,6 @@ if __name__ == "__main__":
         main()
     except BaseException as error:
         print(f"ERROR: {error}", flush=True)
-        input("Press Enter to close...")
+        if "--no-pause" not in sys.argv:
+            input("Press Enter to close...")
         raise SystemExit(1)

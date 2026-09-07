@@ -35,6 +35,10 @@ Return to Gaming Mode and start Peace Walker normally through Steam.
 
 The Steam Deck runtime starts with the game. It applies the installed model and co-op runtime changes and the network stability patch automatically. Do not run the Windows EXE or CMD files.
 
+This is the Steam Deck equivalent of `Play Extra Ops 129 with Network Patch.cmd`.
+
+Credit to ThySyn for the idea to bundle network patch with the launcher
+
 Runtime status is written to:
 
 mgspw/eo129_deck.log
