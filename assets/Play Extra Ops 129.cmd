@@ -2,5 +2,5 @@
 "%~dp0EO129.exe" play
 set "EO129_EXIT=%ERRORLEVEL%"
 echo.
-set /p "EO129_WAIT=Press Enter to continue..."
+timeout /t 5 /nobreak
 exit /b %EO129_EXIT%
