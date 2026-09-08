@@ -14,18 +14,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 STATE = ROOT / "state"
-BACKUP = ROOT / "backups"
+USER_BACKUP = ROOT.parent / "Extra Ops 129 User Files Backup"
+BACKUP = USER_BACKUP / "game-files"
+MISSION_FILES = USER_BACKUP / "mission-modes"
+LEGACY_BACKUP = ROOT / "backups"
 NAMES = ("002aba34.DAT", "002aba34.KEY", "009645fa.PDT")
 
 
 def digest(path):
-    result = hashlib.sha256()
     with path.open("rb") as stream:
-        while True:
-            block = stream.read(1024 * 1024)
-            if not block:
-                return result.hexdigest()
-            result.update(block)
+        return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
 def game_dir():
@@ -82,8 +80,8 @@ def backup_saves(game):
     if not before:
         raise RuntimeError("Save folder is empty; installation stopped.")
     name = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "-" + uuid.uuid4().hex[:8]
-    destination = ROOT / "save-backups" / name
-    destination.parent.mkdir(exist_ok=True)
+    destination = USER_BACKUP / "save-backups" / name
+    destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(source, destination / "files")
     if inventory(destination / "files") != before or inventory(source) != before:
         raise RuntimeError("Save backup verification failed.")
@@ -150,16 +148,18 @@ def install(mode):
     archives = game / "MLG/disc0_rel"
     if digest(game / "METAL GEAR SOLID PEACE WALKER.exe") != doc["exe_sha256"]:
         raise RuntimeError("This game executable is not supported. No files changed.")
-    if (STATE / "install.json").exists():
-        raise RuntimeError("A mode is already installed. Uninstall all first.")
+    current = {name: digest(archives / name) for name in NAMES}
+    prior = (STATE / "install.json").exists() or current != doc["original_files"]
+    if prior:
+        complete_backup = any(all((folder / name).is_file() for name in NAMES) for folder in (BACKUP, LEGACY_BACKUP))
+        if complete_backup:
+            raise RuntimeError("Extra Ops is already installed, you need to uninstall it first to run the installer again")
+        raise RuntimeError("Extra Ops is already installed and it appears the backup folder was removed. You will need to verify your game installation via steam in order to properly uninstall the previous mod, and you should then be able to install extra ops 129.")
     local_dll = game / "winmm.dll"
     if local_dll.exists():
         raise RuntimeError("mgspw/winmm.dll already exists. Remove the other DLL mod first.")
-    current = {name: digest(archives / name) for name in NAMES}
-    if current != doc["original_files"]:
-        raise RuntimeError("Game archives are not verified vanilla files.")
     backup_saves(game)
-    BACKUP.mkdir(exist_ok=True)
+    BACKUP.mkdir(parents=True, exist_ok=True)
     work = ROOT / "work"
     work.mkdir(exist_ok=True)
     for name in NAMES:
@@ -173,19 +173,26 @@ def install(mode):
         for name in NAMES:
             record = doc["patches"]["model_" + name]
             reconstruct_model(BACKUP / name, DATA / record["file"], work / name, record)
-    if mode == "coop":
-        record = doc["patches"]["coop_from_vanilla"]
-        apply_coop(BACKUP / "009645fa.PDT", DATA / record["file"], work / "009645fa.PDT", record)
-    elif mode == "both":
-        record = doc["patches"]["coop_from_models"]
-        temporary = work / "009645fa.PDT.combined"
+    two_player = digest(work / "009645fa.PDT")
+    two_staged = work / "009645fa.two-player.PDT"
+    if mode in ("coop", "both"):
+        shutil.copy2(work / "009645fa.PDT", two_staged)
+        patch_name = "coop_from_models" if mode == "both" else "coop_from_vanilla"
+        record = doc["patches"][patch_name]
+        temporary = work / "009645fa.PDT.four"
         apply_coop(work / "009645fa.PDT", DATA / record["file"], temporary, record)
         os.replace(temporary, work / "009645fa.PDT")
     expected = doc["modes"][mode]["files"]
     if {name: digest(work / name) for name in NAMES} != expected:
         raise RuntimeError("Staged installation verification failed.")
+    mission_files = {}
+    if mode in ("coop", "both"):
+        MISSION_FILES.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(two_staged, MISSION_FILES / "009645fa.two-player.PDT")
+        (MISSION_FILES / "009645fa.four-player.PDT").unlink(missing_ok=True)
+        mission_files = {"two_player_sha256": two_player, "four_player_sha256": expected["009645fa.PDT"], "enabled": True}
     STATE.mkdir(exist_ok=True)
-    receipt = {"mode": mode, "game": str(game.resolve()), "original_files": current, "installed_files": expected, "runtime_sha256": digest(ROOT / "deck/winmm.dll"), "installed_utc": time.time()}
+    receipt = {"mode": mode, "game": str(game.resolve()), "backup": str(USER_BACKUP.resolve()), "original_files": current, "installed_files": expected, "mission_files": mission_files, "runtime_sha256": digest(ROOT / "deck/winmm.dll"), "installed_utc": time.time()}
     (STATE / "install.json").write_text(json.dumps(receipt, indent=2))
     try:
         for name in NAMES:
@@ -204,7 +211,9 @@ def install(mode):
     finally:
         for name in NAMES:
             (work / name).unlink(missing_ok=True)
+        two_staged.unlink(missing_ok=True)
     print(f"Installed Steam Deck mode: {mode}.")
+    print('Set Steam launch options to: WINEDLLOVERRIDES="winmm=n,b" %command%')
 
 
 def receipt():
@@ -212,6 +221,53 @@ def receipt():
     if not path.is_file():
         raise RuntimeError("No Steam Deck installation record was found.")
     return json.loads(path.read_text())
+
+
+def set_four_player(enabled):
+    require_game_closed()
+    receipt_path = STATE / "install.json"
+    record = receipt()
+    mode = record["mode"]
+    if mode not in ("coop", "both"):
+        raise RuntimeError("Four-player co-op was not selected during installation. Reinstall using co-op or both mode.")
+    mission = record.get("mission_files", {})
+    if not mission:
+        raise RuntimeError("This installation does not include switchable mission libraries. Reinstall Extra Ops 129.")
+    current = bool(mission.get("enabled"))
+    if current == enabled:
+        print("4-player co-op is already " + ("enabled." if enabled else "disabled."))
+        return
+    game = Path(record["game"])
+    archive = game / "MLG/disc0_rel/009645fa.PDT"
+    source = MISSION_FILES / ("009645fa.four-player.PDT" if enabled else "009645fa.two-player.PDT")
+    saved = MISSION_FILES / ("009645fa.two-player.PDT" if enabled else "009645fa.four-player.PDT")
+    current_hash = mission["two_player_sha256"] if enabled else mission["four_player_sha256"]
+    target_hash = mission["four_player_sha256"] if enabled else mission["two_player_sha256"]
+    if digest(archive) != current_hash:
+        raise RuntimeError("The active mission library changed. Swap stopped.")
+    if not source.is_file() or digest(source) != target_hash:
+        raise RuntimeError("The stored mission library is missing or changed. Swap stopped.")
+    if saved.exists():
+        raise RuntimeError("The mission-library swap folder has an unexpected extra file. Swap stopped.")
+    os.replace(archive, saved)
+    try:
+        os.replace(source, archive)
+        if digest(archive) != target_hash:
+            raise RuntimeError("Mission-library swap verification failed.")
+        mission["enabled"] = enabled
+        record["installed_files"]["009645fa.PDT"] = target_hash
+        temporary = receipt_path.with_suffix(".json.new")
+        temporary.write_text(json.dumps(record, indent=2))
+        os.replace(temporary, receipt_path)
+        deck_mode = mode if enabled else ("models" if mode == "both" else "")
+        (STATE / "deck_mode.txt").write_text(deck_mode + "\n")
+    except BaseException:
+        if archive.exists() and digest(archive) == target_hash:
+            os.replace(archive, source)
+        if saved.exists():
+            os.replace(saved, archive)
+        raise
+    print("4-player co-op " + ("enabled." if enabled else "disabled.") + " Mission library switched and verified.")
 
 
 def uninstall():
@@ -234,12 +290,13 @@ def uninstall():
     (STATE / "deck_mode.txt").unlink(missing_ok=True)
     (STATE / "install.json").unlink()
     print("Uninstalled all Extra Ops 129 Steam Deck changes.")
+    print("Remove the WINEDLLOVERRIDES launch option before starting the vanilla game.")
 
 
 def restore_save():
     if steam_running():
         raise RuntimeError("Exit Steam completely before restoring saves.")
-    snapshots = sorted((ROOT / "save-backups").glob("*/manifest.json"))
+    snapshots = sorted((USER_BACKUP / "save-backups").glob("*/manifest.json"))
     if not snapshots:
         raise RuntimeError("No save backups exist.")
     for index, path in enumerate(snapshots, 1):
@@ -275,14 +332,18 @@ def main():
     print("4: Uninstall all")
     print("5: Uninstall all and restore save")
     print("6: Restore save only")
-    action = input("Choose 1-6: ").strip()
+    print("7: Disable 4-player co-op")
+    print("8: Enable 4-player co-op")
+    action = input("Choose 1-8: ").strip()
     if action == "1": install("models")
     elif action == "2": install("coop")
     elif action == "3": install("both")
     elif action == "4": uninstall()
     elif action == "5": uninstall(); restore_save()
     elif action == "6": restore_save()
-    else: raise ValueError("Choose 1, 2, 3, 4, 5, or 6.")
+    elif action == "7": set_four_player(False)
+    elif action == "8": set_four_player(True)
+    else: raise ValueError("Choose 1, 2, 3, 4, 5, 6, 7, or 8.")
 
 
 if __name__ == "__main__":

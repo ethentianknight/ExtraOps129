@@ -2,7 +2,7 @@ import ctypes as C,ctypes.wintypes as W,gzip,hashlib,json,os,shutil,struct,subpr
 from pathlib import Path
 from save_backup import backup_saves,restore_saves
 ROOT=Path(sys.executable).parent if getattr(sys,'frozen',False) else Path(__file__).parent
-DATA=ROOT/'data';STATE=ROOT/'state';BACKUP=ROOT/'backups';NAMES=('002aba34.DAT','002aba34.KEY','009645fa.PDT')
+DATA=ROOT/'data';STATE=ROOT/'state';USER_BACKUP=ROOT.parent/'Extra Ops 129 User Files Backup';BACKUP=USER_BACKUP/'game-files';MISSION_FILES=USER_BACKUP/'mission-modes';LEGACY_BACKUP=ROOT/'backups';NAMES=('002aba34.DAT','002aba34.KEY','009645fa.PDT')
 
 def digest(path):
  with path.open('rb') as stream:return hashlib.file_digest(stream,'sha256').hexdigest()
@@ -13,12 +13,6 @@ def game_dir():
  raise RuntimeError('Put this complete Extra Ops 129 folder beside the mgspw folder in the MGS_PW Steam directory.')
 
 def manifest():return json.loads((DATA/'manifest.json').read_text())
-
-def installation_receipt():
- path=STATE/'install.json'
- if not path.is_file():raise RuntimeError('No installation record was found. Run Setup Extra Ops 129.cmd from this same folder and choose install option 1, 2, or 3 before Play.')
- try:return json.loads(path.read_text())
- except (OSError,json.JSONDecodeError) as error:raise RuntimeError('The installation record is unreadable. Keep this folder in its original location and reinstall from verified vanilla files.') from error
 
 def processes():
  k=C.WinDLL('kernel32',use_last_error=True)
@@ -88,10 +82,13 @@ def install(mode):
  if mode not in ('models','coop','both'):raise ValueError('Invalid installation mode.')
  require_game_closed();game=game_dir();doc=manifest();archives=game/'MLG/disc0_rel'
  if digest(game/'METAL GEAR SOLID PEACE WALKER.exe')!=doc['exe_sha256']:raise RuntimeError('This game executable is not supported. No files changed.')
- if (STATE/'install.json').exists():raise RuntimeError('A mode is already installed by this folder. Uninstall all first.')
  current={name:digest(archives/name) for name in NAMES}
- if current!=doc['original_files']:raise RuntimeError('Game archives are not the verified vanilla files. Uninstall other archive mods or verify Steam files first.')
- backup_saves(game,ROOT);BACKUP.mkdir(exist_ok=True);work=ROOT/'work';work.mkdir(exist_ok=True)
+ prior=(STATE/'install.json').exists() or current!=doc['original_files']
+ if prior:
+  complete_backup=any(all((folder/name).is_file() for name in NAMES) for folder in (BACKUP,LEGACY_BACKUP))
+  if complete_backup:raise RuntimeError('Extra Ops is already installed, you need to uninstall it first to run the installer again')
+  raise RuntimeError('Extra Ops is already installed and it appears the backup folder was removed. You will need to verify your game installation via steam in order to properly uninstall the previous mod, and you should then be able to install extra ops 129.')
+ backup_saves(game,USER_BACKUP);BACKUP.mkdir(parents=True,exist_ok=True);work=ROOT/'work';work.mkdir(exist_ok=True)
  for name in NAMES:
   destination=BACKUP/name
   if destination.exists() and digest(destination)!=doc['original_files'][name]:raise RuntimeError(f'Existing backup does not match vanilla: {name}')
@@ -100,15 +97,23 @@ def install(mode):
  if mode in ('models','both'):
   for name in NAMES:
    rec=doc['patches']['model_'+name];reconstruct_model(BACKUP/name,DATA/rec['file'],work/name,rec)
+ two_player=digest(work/'009645fa.PDT')
+ two_staged=work/'009645fa.two-player.PDT'
+ if mode in ('coop','both'):shutil.copy2(work/'009645fa.PDT',two_staged)
  if mode=='coop':
-  rec=doc['patches']['coop_from_vanilla'];apply_coop(BACKUP/'009645fa.PDT',DATA/rec['file'],work/'009645fa.PDT',rec)
+  rec=doc['patches']['coop_from_vanilla'];temporary=work/'009645fa.PDT.four';apply_coop(work/'009645fa.PDT',DATA/rec['file'],temporary,rec);os.replace(temporary,work/'009645fa.PDT')
  elif mode=='both':
-  rec=doc['patches']['coop_from_models'];source=work/'009645fa.PDT';temporary=work/'009645fa.PDT.combined';apply_coop(source,DATA/rec['file'],temporary,rec);os.replace(temporary,source)
+  rec=doc['patches']['coop_from_models'];temporary=work/'009645fa.PDT.four';apply_coop(work/'009645fa.PDT',DATA/rec['file'],temporary,rec);os.replace(temporary,work/'009645fa.PDT')
  expected=doc['modes'][mode]['files']
  if {name:digest(work/name) for name in NAMES}!=expected:raise RuntimeError('Staged installation verification failed.')
  require_game_closed()
  if {name:digest(archives/name) for name in NAMES}!=current:raise RuntimeError('Game files changed during preparation.')
- STATE.mkdir(exist_ok=True);receipt={'mode':mode,'game':str(game.resolve()),'original_files':current,'installed_files':expected,'installed_utc':time.time()};(STATE/'install.json').write_text(json.dumps(receipt,indent=2))
+ mission_files={}
+ if mode in ('coop','both'):
+  MISSION_FILES.mkdir(parents=True,exist_ok=True);two=MISSION_FILES/'009645fa.two-player.PDT';four=MISSION_FILES/'009645fa.four-player.PDT'
+  shutil.copy2(two_staged,two);four.unlink(missing_ok=True)
+  mission_files={'two_player_sha256':two_player,'four_player_sha256':expected['009645fa.PDT'],'enabled':True}
+ STATE.mkdir(exist_ok=True);receipt={'mode':mode,'game':str(game.resolve()),'backup':str(USER_BACKUP.resolve()),'original_files':current,'installed_files':expected,'mission_files':mission_files,'installed_utc':time.time()};(STATE/'install.json').write_text(json.dumps(receipt,indent=2))
  try:
   for name in NAMES:
    shutil.copy2(work/name,archives/name)
@@ -119,10 +124,11 @@ def install(mode):
   raise
  finally:
   for name in NAMES:(work/name).unlink(missing_ok=True)
+  two_staged.unlink(missing_ok=True)
  print(f'Installed mode: {mode}. Use Play Extra Ops 129.cmd for each session.')
 
 def uninstall():
- require_game_closed();receipt=installation_receipt();game=Path(receipt['game']);archives=game/'MLG/disc0_rel';work=ROOT/'work';work.mkdir(exist_ok=True)
+ require_game_closed();receipt=json.loads((STATE/'install.json').read_text());game=Path(receipt['game']);archives=game/'MLG/disc0_rel';work=ROOT/'work';work.mkdir(exist_ok=True)
  if {name:digest(archives/name) for name in NAMES}!=receipt['installed_files']:raise RuntimeError('Installed archives changed. Uninstall stopped to protect them.')
  if {name:digest(BACKUP/name) for name in NAMES}!=receipt['original_files']:raise RuntimeError('Verified original backups are missing or damaged.')
  for name in NAMES:shutil.copy2(archives/name,work/name)
@@ -138,8 +144,8 @@ def uninstall():
  (STATE/'install.json').unlink();print('Uninstalled all Extra Ops 129 changes. Original archives restored and verified.')
 
 def snapshots():
- items=sorted((ROOT/'save-backups').glob('*/manifest.json'))
- if not items:raise RuntimeError('No save backups exist in this package.')
+ items=sorted((USER_BACKUP/'save-backups').glob('*/manifest.json'))
+ if not items:raise RuntimeError('No save backups exist in Extra Ops 129 User Files Backup.')
  print('Available save backups:')
  for index,path in enumerate(items,1):print(f'{index}: {path.parent.name}')
  choice=int(input('Choose a save backup number: '))
@@ -147,18 +153,46 @@ def snapshots():
  return items[choice-1].parent
 
 def uninstall_restore_save():
- require_steam_closed();snapshot=snapshots();receipt=installation_receipt();game=Path(receipt['game']);uninstall();restore_saves(game,ROOT,snapshot)
+ require_steam_closed();snapshot=snapshots();receipt=json.loads((STATE/'install.json').read_text());game=Path(receipt['game']);uninstall();restore_saves(game,USER_BACKUP,snapshot)
 
 def restore_save_only():
- require_steam_closed();restore_saves(game_dir(),ROOT,snapshots())
+ require_steam_closed();restore_saves(game_dir(),USER_BACKUP,snapshots())
 
 def installed_mode():
- receipt=installation_receipt();doc=manifest();mode=receipt['mode']
+ receipt=json.loads((STATE/'install.json').read_text());doc=manifest();mode=receipt['mode']
  if mode not in doc['modes']:raise RuntimeError('Unknown installed mode.')
  game=Path(receipt['game']);archives=game/'MLG/disc0_rel';actual={name:digest(archives/name) for name in NAMES}
- if actual!=doc['modes'][mode]['files'] or actual!=receipt['installed_files']:raise RuntimeError('Installed files do not match the selected mode.')
+ if actual!=receipt['installed_files']:raise RuntimeError('Installed files do not match the selected mode.')
  if digest(game/'METAL GEAR SOLID PEACE WALKER.exe')!=doc['exe_sha256']:raise RuntimeError('Unsupported game executable.')
  return mode,game
+
+def set_four_player(enabled):
+ require_game_closed();mode,game=installed_mode()
+ if mode not in ('coop','both'):raise RuntimeError('Four-player co-op was not selected during installation. Reinstall using co-op or both mode.')
+ receipt_path=STATE/'install.json';receipt=json.loads(receipt_path.read_text());record=receipt.get('mission_files',{})
+ if not record:raise RuntimeError('This installation does not include switchable mission libraries. Reinstall Extra Ops 129.')
+ current=bool(record.get('enabled'))
+ if current==enabled:
+  print('4-player co-op is already '+('enabled.' if enabled else 'disabled.'));return
+ archive=game/'MLG/disc0_rel'/'009645fa.PDT'
+ source=MISSION_FILES/('009645fa.four-player.PDT' if enabled else '009645fa.two-player.PDT')
+ saved=MISSION_FILES/('009645fa.two-player.PDT' if enabled else '009645fa.four-player.PDT')
+ current_hash=record['two_player_sha256'] if enabled else record['four_player_sha256']
+ target_hash=record['four_player_sha256'] if enabled else record['two_player_sha256']
+ if digest(archive)!=current_hash:raise RuntimeError('The active mission library changed. Swap stopped.')
+ if not source.is_file() or digest(source)!=target_hash:raise RuntimeError('The stored mission library is missing or changed. Swap stopped.')
+ if saved.exists():raise RuntimeError('The mission-library swap folder has an unexpected extra file. Swap stopped.')
+ os.replace(archive,saved)
+ try:
+  os.replace(source,archive)
+  if digest(archive)!=target_hash:raise RuntimeError('Mission-library swap verification failed.')
+  record['enabled']=enabled;receipt['installed_files']['009645fa.PDT']=target_hash
+  temporary=receipt_path.with_suffix('.json.new');temporary.write_text(json.dumps(receipt,indent=2));os.replace(temporary,receipt_path)
+ except BaseException:
+  if archive.exists() and digest(archive)==target_hash:os.replace(archive,source)
+  if saved.exists():os.replace(saved,archive)
+  raise
+ print('4-player co-op '+('enabled.' if enabled else 'disabled.')+' Mission library switched and verified.')
 
 def play():
  require_game_closed();mode,game=installed_mode()
@@ -181,7 +215,8 @@ def play():
      except OSError as error:
       if error.winerror!=31 or attempt==5:raise
       time.sleep(3)
-   if mode in ('coop','both'):
+   enabled=json.loads((STATE/'install.json').read_text()).get('mission_files',{}).get('enabled',False)
+   if mode in ('coop','both') and enabled:
     import coop_runtime
     coop_runtime.D=STATE
     for attempt in range(6):
@@ -198,7 +233,9 @@ def check():
  if mode in ('models','both'):
   import model_runtime
   model_runtime.validate()
- print(f'Installation verified. Active mode: {mode}.')
+ enabled=json.loads((STATE/'install.json').read_text()).get('mission_files',{}).get('enabled')
+ suffix='' if enabled is None else f'; 4-player co-op is {"enabled" if enabled else "disabled"}'
+ print(f'Installation verified. Active mode: {mode}{suffix}.')
 
 def setup():
  print('Extra Ops 129 Setup')
@@ -208,9 +245,11 @@ def setup():
  print('4: Uninstall all')
  print('5: Uninstall all and restore save')
  print('6: Restore save only')
- action=input('Choose 1-6: ').strip()
- actions={'1':lambda:install('models'),'2':lambda:install('coop'),'3':lambda:install('both'),'4':uninstall,'5':uninstall_restore_save,'6':restore_save_only}
- if action not in actions:raise ValueError('Choose 1, 2, 3, 4, 5, or 6.')
+ print('7: Disable 4-player co-op')
+ print('8: Enable 4-player co-op')
+ action=input('Choose 1-8: ').strip()
+ actions={'1':lambda:install('models'),'2':lambda:install('coop'),'3':lambda:install('both'),'4':uninstall,'5':uninstall_restore_save,'6':restore_save_only,'7':lambda:set_four_player(False),'8':lambda:set_four_player(True)}
+ if action not in actions:raise ValueError('Choose 1, 2, 3, 4, 5, 6, 7, or 8.')
  actions[action]()
 
 def main():
@@ -221,7 +260,7 @@ def main():
   print('2: Play')
   print('3: Check installation')
   action={'1':'setup','2':'play','3':'check'}.get(input('Choose 1-3: ').strip(),'')
- actions={'setup':setup,'play':play,'check':check,'install-models':lambda:install('models'),'install-coop':lambda:install('coop'),'install-both':lambda:install('both'),'uninstall':uninstall}
+ actions={'setup':setup,'play':play,'check':check,'install-models':lambda:install('models'),'install-coop':lambda:install('coop'),'install-both':lambda:install('both'),'disable-four-player':lambda:set_four_player(False),'enable-four-player':lambda:set_four_player(True),'uninstall':uninstall}
  if action not in actions:raise ValueError('Choose setup, play, or check.')
  actions[action]()
 

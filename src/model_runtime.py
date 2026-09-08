@@ -10,8 +10,10 @@ def read_manifest():
     from eo129 import game_dir
     unified = json.loads((DATA / 'manifest.json').read_text())
     receipt = json.loads((D / 'install.json').read_text())
-    mode = receipt['mode']
-    result = {'exe_sha256': unified['exe_sha256'], 'files': {name: {'patched_sha256': value} for name, value in unified['modes'][mode]['files'].items()}}
+    disk_files = receipt['installed_files']
+    if set(disk_files) != set(unified['original_files']):
+        raise ValueError('Installation receipt has an invalid archive list')
+    result = {'exe_sha256': unified['exe_sha256'], 'files': {name: {'patched_sha256': value} for name, value in disk_files.items()}}
     result['game_dir'] = str(game_dir() / 'MLG/disc0_rel')
     return result
 from character_config import load_config, CONFIG_PATH, SLOTS
@@ -35,9 +37,9 @@ def validate():
     if len(config['resource_map']) != 22 or len({p[0] for p in config['resource_map']}) != 22:
         raise ValueError('Invalid model resource list')
     pairs = [(a['gender'], a['outfit']) for a in config['assignments']]
-    if pairs[:12] != [(1, 3), (1, 16), (1, 24), (2, 27), (2, 14), (2, 15), (2, 25), (2, 17), (2, 18), (2, 19), (1, 25), (2, 20)]:
+    if pairs[:10] != [(1, 3), (1, 16), (1, 24), (2, 27), (2, 14), (2, 15), (2, 25), (2, 17), (2, 18), (2, 19)]:
         raise ValueError('Invalid base roster')
-    if len(pairs) != len(set(pairs)) or not set(pairs[12:]) <= {(s[0], s[1]) for s in SLOTS.values()}:
+    if len(pairs) != len(set(pairs)) or not set(pairs[10:]) <= {(s[0], s[1]) for s in SLOTS.values()}:
         raise ValueError('Conflicting outfit choices')
     print('Character configuration loaded.', flush=True)
     for key, value in config['user_selections'].items():
@@ -211,7 +213,7 @@ def apply(pid, base):
             raise
         (D / 'runtime_applied.json').write_text(json.dumps({'pid': pid, 'base': hex(base), 'stub': hex(allocation), 'assignments': config['assignments'], 'resource_map': config['resource_map'], 'verified': True, 'time': time.time()}, indent=2))
         applied = True
-        print(f"APPLIED: roster and {len(config['assignments']) - 12} configured outfit overrides; readback verified.", flush=True)
+        print(f"APPLIED: roster and {len(config['assignments']) - 10} configured outfit overrides; readback verified.", flush=True)
     finally:
         if suspended:
             status = nt.NtResumeProcess(h)

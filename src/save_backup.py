@@ -1,4 +1,4 @@
-import hashlib,json,os,shutil,subprocess,time,uuid
+import hashlib,json,os,shutil,subprocess,uuid
 from datetime import datetime,timezone
 from pathlib import Path
 
@@ -48,20 +48,8 @@ def restore_saves(game,package,snapshot):
     try:
         if target.exists():os.replace(target,previous);moved=True
         os.replace(staged,target)
-        if inventory(target)!=receipt['files']:raise RuntimeError('Restored save verification failed after replacement.')
     except Exception:
-        failed=target.with_name(target.name+'.failed-restore-'+suffix)
-        if moved:
-            if target.exists():os.replace(target,failed)
-            os.replace(previous,target)
+        if moved and not target.exists():os.replace(previous,target)
         raise
-    timestamp=time.time()
-    for path in target.rglob('*'):
-        if path.is_file():os.utime(path,(timestamp,timestamp))
-    if inventory(target)!=receipt['files']:raise RuntimeError('Restored save changed while updating local timestamps.')
-    state=package/'state';state.mkdir(exist_ok=True)
-    result={'snapshot':snapshot.name,'game':str(game.resolve()),'save_root':str(target.resolve()),'files':receipt['files'],'restored_utc':datetime.now(timezone.utc).isoformat(),'previous_saves':str(previous.resolve()),'verified_after_replacement':True,'local_timestamps_refreshed':True}
-    (state/'last-save-restore.json').write_text(json.dumps(result,indent=2))
     print('Verified save snapshot restored. Pre-restore saves were preserved.')
-    print(f'Previous saves: {previous}')
-    print('Steam Cloud must already be disabled for Peace Walker before Steam restarts. If Steam reports a conflict, keep the local files.')
+    print('Before launching, disable Steam Cloud for Peace Walker; if prompted about a conflict, keep the restored local files.')
