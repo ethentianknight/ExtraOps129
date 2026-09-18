@@ -149,7 +149,8 @@ def install(mode):
     if digest(game / "METAL GEAR SOLID PEACE WALKER.exe") != doc["exe_sha256"]:
         raise RuntimeError("This game executable is not supported. No files changed.")
     current = {name: digest(archives / name) for name in NAMES}
-    prior = (STATE / "install.json").exists() or current != doc["original_files"]
+    # A Steam restore may leave a stale receipt beside fully vanilla archives.
+    prior = current != doc["original_files"]
     if prior:
         complete_backup = any(all((folder / name).is_file() for name in NAMES) for folder in (BACKUP, LEGACY_BACKUP))
         if complete_backup:

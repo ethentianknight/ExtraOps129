@@ -92,6 +92,6 @@ REQUIREMENTS
 
 SteamOS x86_64
 Python 3.8 or newer
-Metal Gear Solid: Peace Walker Steam build 25052315
+Metal Gear Solid: Peace Walker Steam build 25294658
 
 The installer stops if mgspw/winmm.dll already exists. Remove the conflicting DLL mod before installing Extra Ops 129.

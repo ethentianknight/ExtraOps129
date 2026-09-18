@@ -18,7 +18,7 @@ def read_manifest():
     return result
 from character_config import load_config, CONFIG_PATH, SLOTS
 config = load_config(json.loads((DATA / 'runtime_config.json').read_text()))
-HOOK = 873582
+HOOK = 873966
 MAP = 18916496
 TAIL = MAP + (96 - len(config['resource_map'])) * 8
 MAP_BYTES = len(config['resource_map']) * 8
@@ -140,7 +140,7 @@ def apply(pid, base):
         assert len(captured) == 124
         deadline = time.monotonic() + 120
         while time.monotonic() < deadline:
-            if read(base + HOOK, 12) == expected_tail and read(base + 4289552, 124) == captured:
+            if read(base + HOOK, 12) == expected_tail and read(base + 4289936, 124) == captured:
                 break
             time.sleep(0.25)
         else:

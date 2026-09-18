@@ -2,6 +2,15 @@
 
 Character models and four-player co-op for Metal Gear Solid: Peace Walker.
 
+Compatibility update for game version 1.3.2 (Steam build 25294658): updated
+executable verification, runtime hook addresses, and code signatures. The archive
+patches are unchanged. Setup can reinstall after Steam restores all three archives
+to verified originals, even if a previous installation receipt remains.
+
+Installation, mission-library switching, and restoration passed isolated tests.
+Runtime targets were verified against a live memory capture; gameplay validation
+is still pending.
+
 ## Modified files
 
 - `mgspw\MLG\disc0_rel\002aba34.DAT`

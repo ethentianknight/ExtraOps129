@@ -83,7 +83,9 @@ def install(mode):
  require_game_closed();game=game_dir();doc=manifest();archives=game/'MLG/disc0_rel'
  if digest(game/'METAL GEAR SOLID PEACE WALKER.exe')!=doc['exe_sha256']:raise RuntimeError('This game executable is not supported. No files changed.')
  current={name:digest(archives/name) for name in NAMES}
- prior=(STATE/'install.json').exists() or current!=doc['original_files']
+ # Steam verification/updates can restore every archive while leaving our receipt.
+ # Only byte-verified vanilla files qualify for reinstall; mixed files still stop.
+ prior=current!=doc['original_files']
  if prior:
   complete_backup=any(all((folder/name).is_file() for name in NAMES) for folder in (BACKUP,LEGACY_BACKUP))
   if complete_backup:raise RuntimeError('Extra Ops is already installed, you need to uninstall it first to run the installer again')

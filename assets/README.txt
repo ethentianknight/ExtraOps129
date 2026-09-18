@@ -78,7 +78,7 @@ The installer stores verified original archives under `Extra Ops 129\backups\`. 
 
 ## Requirements
 
-- Metal Gear Solid: Peace Walker Steam build `25052315`
+- Metal Gear Solid: Peace Walker Steam build `25294658`
 - Windows x64
 - No Python installation required for the release package
 

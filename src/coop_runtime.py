@@ -2,7 +2,7 @@ import ctypes as C, ctypes.wintypes as W, hashlib, json, struct, time, sys
 from pathlib import Path
 R=Path(sys.executable).parent if getattr(sys,'frozen',False) else Path(__file__).parent
 D=R
-HOOK=0x1f8277
+HOOK=0x1f83f7
 expected_tail=bytes.fromhex('443bf6418bc6bb01000000410f4dc4')
 
 def stub_code(base, return_address=None):
@@ -67,11 +67,11 @@ def apply(pid,base):
   if not k.QueryFullProcessImageNameW(h,0,path,C.byref(length)):raise C.WinError(C.get_last_error())
   exe=Path(path.value)
   assert exe.name=='METAL GEAR SOLID PEACE WALKER.exe',str(exe)
-  assert hashlib.sha256(exe.read_bytes()).hexdigest()=='9100e40cab8a4d96fbf6a06102e6d3a82dd2a8d951644ffbbef9f536a91f975c','Unsupported game build'
-  captured=bytes.fromhex('440fb6d1488d05a521240149c1e2054c03d04885d27407410fb7026689024d85c07409410fb74202664189004d85c97409410fb7420466418901488b4424284885c07409410f284210660f7f00c3')
+  assert hashlib.sha256(exe.read_bytes()).hexdigest()=='e9c2e7241438ca70cdc5470b36504995deedd1e5f731a3b2609ff8a96a894305','Unsupported game build'
+  captured=bytes.fromhex('440fb6d1488d052520240149c1e2054c03d04885d27407410fb7026689024d85c07409410fb74202664189004d85c97409410fb7420466418901488b4424284885c07409410f284210660f7f00c3')
   deadline=time.monotonic()+120
   while time.monotonic()<deadline:
-   if read(base+HOOK,15)==expected_tail and read(base+0x1f8810,0x4e)==captured:break
+   if read(base+HOOK,15)==expected_tail and read(base+0x1f8990,0x4e)==captured:break
    time.sleep(.25)
   else:raise RuntimeError('Loaded code did not match the verified game build')
   code=stub_code(base);allocation=k.VirtualAllocEx(h,None,len(code),0x3000,0x04)
