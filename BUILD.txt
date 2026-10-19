@@ -9,3 +9,9 @@ python build_deck.py
 
 The build creates the ready-to-use folder and ZIP under dist.
 It uses only the files included in this source package.
+
+Versioning follows the supported Peace Walker game version. The current version
+is 1.3.2. A mod-only update for the same game version becomes 1.3.2.1, then
+1.3.2.2, and so on. When targeting a new game version, match that version and
+restart the mod-only suffix. Keep release documentation, manifests, and both
+Windows and Steam Deck package names consistent. See README.md, Versioning.

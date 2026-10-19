@@ -11,6 +11,17 @@ Installation, mission-library switching, and restoration passed isolated tests.
 Runtime targets were verified against a live memory capture; gameplay validation
 is still pending.
 
+## Versioning
+
+Extra Ops 129 versions follow the supported Peace Walker game version. The
+current mod version is **1.3.2**, matching Peace Walker **1.3.2**.
+
+For mod-only updates while the game version stays the same, append an incrementing
+fourth number: **1.3.2.1**, **1.3.2.2**, and so on. When support moves to a new
+Peace Walker version, use that game version and restart the mod-only suffix.
+Use this version consistently in release documentation, manifests, and Windows
+and Steam Deck package names. Steam build IDs are separate compatibility metadata.
+
 ## Modified files
 
 - `mgspw\MLG\disc0_rel\002aba34.DAT`
